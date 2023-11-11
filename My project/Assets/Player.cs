@@ -27,9 +27,12 @@ public class Player : MonoBehaviour
         float v = Input.GetAxis("Vertical"); // -1 pra tras, 0 nada, 1 pra frente
 
         Vector3 direcao = new Vector3(x: h, y: 0, z: v);
-        rb.AddForce(direcao * velocidade * Time.deltaTime,ForceMode.Impulse);
-        
-       //
+        rb.AddForce(direcao * velocidade * Time.deltaTime, ForceMode.Impulse);
+        if (transform.position.y <= -10)
+        {
+            //o jogador caiu
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
-     
+}
+
