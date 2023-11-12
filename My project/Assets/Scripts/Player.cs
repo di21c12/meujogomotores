@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,7 +9,9 @@ public class Player : MonoBehaviour
 {
     public int velocidade = 10;
     public int forcaPulo = 7;
+    public bool noChao;
     private Rigidbody rb;
+    private AudioSource source;
 
     // Start is called before the first frame update
 
@@ -15,6 +19,15 @@ public class Player : MonoBehaviour
     {
         Debug.Log(message: "START");
         TryGetComponent(out rb);
+        TryGetComponent(out source);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!noChao && collision.gameObject.tag == "Chao")
+        {
+            noChao = true;
+        }
     }
 
     // Update is called once per frame 
@@ -28,6 +41,17 @@ public class Player : MonoBehaviour
 
         Vector3 direcao = new Vector3(x: h, y: 0, z: v);
         rb.AddForce(direcao * velocidade * Time.deltaTime, ForceMode.Impulse);
+
+        if (Input.GetKeyDown(KeyCode.Space) && noChao)
+        {
+            //pulo
+            source.Play();
+            
+            rb.AddForce(Vector3.up * forcaPulo, ForceMode.Impulse);
+            noChao = false;
+        }
+        
+        
         if (transform.position.y <= -10)
         {
             //o jogador caiu
